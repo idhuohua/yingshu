@@ -24,6 +24,7 @@ function Player({
   const videoRef = usePRef(null);
   const hasRealVideo = !!SHOW.videoSrc;
   const videoOffset = SHOW.videoStartOffset || 0;
+  const [videoLoading, setVideoLoading] = usePState(false);
 
   // 同步播放/暂停状态到 <video>
   usePEffect(() => {
@@ -45,7 +46,7 @@ function Player({
   usePEffect(() => {
     if (!hasRealVideo) return;
     const v = videoRef.current;
-    if (!v) return;
+    if (!v || v.readyState === 0) return;
     const want = currentTime + videoOffset;
     if (Math.abs(v.currentTime - want) > 0.4) {
       v.currentTime = want;
@@ -143,15 +144,21 @@ function Player({
             <video
               ref={videoRef}
               src={SHOW.videoSrc}
+              poster={SHOW.videoPoster || "imgs/甄嬛传.jpeg"}
               preload="auto"
               playsInline
               controls={false}
               onTimeUpdate={handleVideoTimeUpdate}
               onLoadedMetadata={(e) => {
                 console.log("[video] loaded, duration=", e.currentTarget.duration, "→ seek to", videoOffset);
-                e.currentTarget.currentTime = videoOffset;
+                e.currentTarget.currentTime = currentTime + videoOffset;
               }}
+              onLoadStart={() => setVideoLoading(true)}
+              onCanPlay={() => setVideoLoading(false)}
+              onPlaying={() => setVideoLoading(false)}
+              onWaiting={() => setVideoLoading(true)}
               onError={(e) => {
+                setVideoLoading(false);
                 const err = e.currentTarget.error;
                 console.error("[video] error", err && { code: err.code, message: err.message }, "src=", e.currentTarget.currentSrc);
               }}
@@ -172,6 +179,13 @@ function Player({
           )}
 
           <div className="stage-vignette" />
+
+          {videoLoading && (
+            <div className="video-load-status" role="status" aria-live="polite">
+              <span className="video-load-spinner" />
+              <span>正在缓冲视频…</span>
+            </div>
+          )}
 
           {/* 字幕：anchored=true 时用 gold 高亮表示已联动到原著 */}
           {subtitleEnabled && currentDialogue && (

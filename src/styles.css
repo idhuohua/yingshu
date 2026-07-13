@@ -312,6 +312,27 @@ button { font-family: inherit; }
     radial-gradient(60% 80% at 50% 60%, transparent 0%, rgba(0,0,0,.6) 100%);
   pointer-events:none;
 }
+.video-load-status {
+  position: absolute; left: 50%; top: 50%; z-index: 4;
+  transform: translate(-50%, -50%);
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 13px; border-radius: 999px;
+  color: rgba(255,255,255,.86); background: rgba(12,12,14,.72);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font-size: 11px; letter-spacing: .04em;
+  pointer-events: none;
+}
+.video-load-spinner {
+  width: 13px; height: 13px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.25);
+  border-top-color: #ffe2aa;
+  animation: videoSpin .8s linear infinite;
+}
+@keyframes videoSpin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .video-load-spinner { animation-duration: 1.6s; }
+}
 /* 全屏：player 整块进入，stage 占满，控制条贴底，剧集条隐藏 */
 .player:fullscreen,
 .player:-webkit-full-screen {

@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# Local editor settings
+.vscode/
+
+# Browser test artifacts
+.playwright-mcp/
+
+# Local logs and temporary files
+*.log
+*.tmp
+*.swp

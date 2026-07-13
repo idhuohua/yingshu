@@ -1075,6 +1075,7 @@ window.SHOW = {
     "p22"
   ],
   "videoSrc": "video/zhenhuanzhuan/第一集演示.mp4",
+  "videoPoster": "imgs/甄嬛传.jpeg",
   "videoStartOffset": 0,
   "utterances": [
     {
